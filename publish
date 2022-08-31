@@ -1,0 +1,24 @@
+#!/bin/zsh
+
+current_branch=$(git branch | ag '\*' | awk '{print $2}')
+current_hash=$(openssl rand -hex 4)
+
+tmpFile=$(mktemp)
+
+if [[ "${current_branch}" == "gh-pages" ]]
+then
+	git commit -am '(wip) Prepare to publish'
+	git push -f origin gh-pages
+else
+	git branch -D gh-pages
+	git checkout -b gh-pages
+	sed "s/PUBLISH_HASH/${current_hash}/g" index.html > $tmpFile
+	mv $tmpFile index.html
+	git add .
+	git add -u .
+	git commit -am '(wip) Prepare to publish'
+	git push -f origin gh-pages
+	git checkout ${current_branch}
+fi
+
+echo Published ${current_hash}
