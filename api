@@ -1,0 +1,43 @@
+#!/bin/zsh
+
+script=$0
+
+ls .har/* >/dev/null || {
+	echo
+	echo "No HAR file found on .har"
+	echo "Please download one"
+	exit 1
+}
+
+method=$1
+query=$2
+
+function showExamples {
+	echo "Sample queries:"
+	echo
+	echo "   $script GET account"
+	echo "   $script GET account/email"
+	echo "   $script GET account/preferences"
+	echo "   $script GET account/kid"
+	echo "   $script GET user/pepellou/perf/classical"
+	echo "   $script GET user/pepellou/activity"
+	echo "   $script GET crosstable/pepellou/IGMGataKamsky"
+	echo "   $script GET user/pepellou/current-game"
+	echo "   $script GET storm/dashboard/pepellou"
+	echo "   $script GET tournament | jq '.[\"started\"] | map({id:.id, name: .fullName, n: .nbPlayers})'"
+	echo "   $script GET tournament/yVjQAEc8 | jq '{timeLeft: .secondsToFinish, standings: .standing.players | map({name:.name,score:.score,fire:.sheet.fire})}'"
+}
+
+[[ "$method" == "" ]] && {
+	showExamples
+	exit 0
+}
+
+[[ "$query" == "" ]] && {
+	showExamples
+	exit 0
+}
+
+jwt=$(ag '"Bearer ' .har/* | tail -n 1 | awk '{ print $NF }' | awk 'BEGIN { FS="\"" } { print $1 }')
+
+curl -H "Authorization: Bearer $jwt" -X $method https://lichess.org/api/$query

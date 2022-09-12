@@ -4,7 +4,14 @@ const oauth = new OAuth2AuthCodePKCE({
 	authorizationUrl: 'https://lichess.org/oauth',
 	tokenUrl: 'https://lichess.org/api/token',
 	clientId: 'lichess-widget-for-streamers',
-	scopes: ['email:read'],
+	scopes: [
+		'email:read',
+		'preference:read',
+		'team:read',
+		//'follow:read',  // to get the list of users I follow
+		//'board:play',   // to share the chat of the current game
+		'challenge:read',
+	],
 	redirectUrl: 'https://pepellou.github.io/lichess-widget-for-streamers/index',
 	onAccessTokenExpiry(refreshAccessToken) {
 		console.log("Expired! Access token needs to be renewed.");
