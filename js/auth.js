@@ -11,6 +11,7 @@ const oauth = new OAuth2AuthCodePKCE({
 		//'follow:read',  // to get the list of users I follow
 		//'board:play',   // to share the chat of the current game
 		'challenge:read',
+		'study:read'
 	],
 	redirectUrl: 'https://pepellou.github.io/lichess-widget-for-streamers/index',
 	onAccessTokenExpiry(refreshAccessToken) {
