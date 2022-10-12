@@ -11,6 +11,13 @@ function DomElement(element) {
 
 	this.onClick = (callback) => this.addEventListener('click', callback);
 
+	this.content = (html) => {
+		if (html) {
+			this.element.innerHTML = html;
+		}
+		return this.element.innerHTML;
+	};
+
 	return this;
 }
 
